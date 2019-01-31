@@ -1,11 +1,11 @@
 # Site settings
-title: Freelancer
-email: your-email@domain.com
-url: https://example.github.io
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
-keywords: "your keywords, separated by commas"
+title: Albert Cao
+email: arcao@sfu.ca
+url: https://albertrcao.github.io
+description: "Welcome!"
+keywords: "albert, cao, albert cao"
 skills: "Web Developer - Graphic Artist - User Experience Designer"
-meta_author: LastName FirstName
+meta_author: Cao Albert
 
 # Google webmaster tools
 google_verify:
@@ -48,7 +48,7 @@ social:
   - title: bitbucket
     url: http://bitbucket.org/jekyll
   - title: github
-    url: http://github.com/jekyll
+    url: http://github.com/albertrcao
 
 # Postal address (add as many lines as necessary)
 address:
