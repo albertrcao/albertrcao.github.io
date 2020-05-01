@@ -8,3 +8,30 @@
     font-family: 'Papyrus';
     src: url('../fonts/Papyrus-Regular.ttf') format('truetype');
 }
+
+/* Hamburger icon styling */
+.navbar-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='4' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    transition: ease-in .2s;
+}
+
+.navbar-toggler .navbar-toggler-icon.open {
+    transform: rotate(90deg);
+}
+
+.navbar-toggler {
+    margin-left: -10px;
+    border-color: transparent !important;
+    border: none !important;
+}
+
+/* Hamburger dropdown item styling */
+.navbar-item {
+    font-size: 16px;
+    color: white;
+    padding-top: 100px;
+}
+
+    .navbar-item.active {
+        font-weight: bold;
+    }
