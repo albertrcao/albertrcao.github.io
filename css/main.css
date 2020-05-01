@@ -3,3 +3,8 @@
     font-family: 'Montserrat';
     src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'Papyrus';
+    src: url('../fonts/Papyrus-Regular.ttf') format('truetype');
+}
