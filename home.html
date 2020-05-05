@@ -12,9 +12,39 @@
     </head>
     <!-- Style -->
     <style>
+        .title {
+            color: white;
+        }
+
         .nav-link {
             color: white;
             font-size: 120%;
+        }
+
+        .sticky-header {
+            background-color: black;
+            position: -webkit-sticky; 
+            position: sticky; 
+            top: 0;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .fixed-element {
+            position: -webkit-fixed; 
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            z-index: -100;
+            width: 110%;
+            height: auto;
+        }
+
+        .content {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: -16px;
+            z-index: 50;
         }
     </style>
     <!-- Body -->
@@ -39,18 +69,40 @@
         </div>
         <!-- Content -->
         <div class="container">
-            <div class="row text-center mt-3">
+            <div class="row text-center fixed-element">
                 <div class="col-12">
-                    <h1 class="title"><b>Hello there!</b></h1>
+                    <img src="images/kitten.jpg" style="width: 100%; height: inherit">
                 </div>
             </div>
-            <div class="row" style="position: -webkit-sticky; position: sticky; top: 0">
-                <div class="col-12 text-center">
-                    <h7>This is the site for real.</h7>
-                </div>
+        </div>
+        <div class="row text-center sticky-header" style="margin-top: 30rem">
+            <div class="col-12">
+                <h1 class="title mt-2"><b>Hello there!</b></h1>
             </div>
-            <div class="row">
-
+        </div>
+        <div class="row content">
+            <div class="col-12">
+                <h5>Please ensure there is safe and adequate access to the delivery location, this includes driveways, hallways, staircases, walkways and elevators. If you need to reserve an elevator, please ensure this is done prior to the delivery. If there is no elevator in the building the team can bring your order up to the third floor. Ensure there is an adult over 18 available during the selected delivery window. Please review the IKEA terms and conditions linked below for more information.</h5>
+            </div>
+        </div>
+        <div class="row text-center sticky-header mt-3">
+            <div class="col-12 text-center">
+                <h1 class="title mt-2"><b>Projects</b></h1>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-12">
+                <h5>Please ensure there is safe and adequate access to the delivery location, this includes driveways, hallways, staircases, walkways and elevators. If you need to reserve an elevator, please ensure this is done prior to the delivery. If there is no elevator in the building the team can bring your order up to the third floor. Ensure there is an adult over 18 available during the selected delivery window. Please review the IKEA terms and conditions linked below for more information.</h5>
+            </div>
+        </div>
+        <div class="row text-center sticky-header mt-3">
+            <div class="col-12 text-center">
+                <h1 class="title mt-2"><b>Contact</b></h1>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-12">
+                <h5>Please ensure there is safe and adequate access to the delivery location, this includes driveways, hallways, staircases, walkways and elevators. If you need to reserve an elevator, please ensure this is done prior to the delivery. If there is no elevator in the building the team can bring your order up to the third floor. Ensure there is an adult over 18 available during the selected delivery window. Please review the IKEA terms and conditions linked below for more information.</h5>
             </div>
         </div>
     </body>
