@@ -51,8 +51,14 @@
 }
 
 .slide {
-    width: 25em; 
-    height: auto;
+    /* width: 25rem; 
+    height: 26rem; */
+    width: 30%;
+    height: 50%;
+    object-fit: cover;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 .role {
@@ -64,6 +70,20 @@
 }
 
 .role-image {
-    width: 25em; 
-    height: auto;
+    /* width: 25rem; 
+    height: 26rem; */
+    width: 30%;
+    height: 50%;
+    object-fit: cover;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.biscuits {
+    position: fixed;
+    right: 0%;
+    top: 0%;
+    transform: translate(0%, 0%);
+    cursor: pointer;
 }

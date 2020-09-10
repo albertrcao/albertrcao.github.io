@@ -109,7 +109,22 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            
+                            <img src="images/tp.jpeg" class="role-image misc-image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="images/resume.jpg" class="role-image resume-image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="images/contact.jpg" class="role-image contact-image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="images/biscuits.gif" class="biscuits">
                         </div>
                     </div>
                 </div>
@@ -121,6 +136,7 @@
 <script>
     $(".role-image").each(function(){
         $(this).hide();
+        $(".biscuits").hide();
     });
 
     $(".webdev").hover(
@@ -153,11 +169,45 @@
         }
     );
 
-    // $(".role").hover(
-    //     function() {
-    //         $(".role-image").show();
-    //     }, function() {
-    //         $(".role-image").hide();
-    //     }
-    // );
+    $(".misc").hover(
+        function() {
+            $(".misc-image").show();
+            $(".slide").hide();
+        }, function() {
+            $(".misc-image").hide();
+            $(".slide").show();
+        }
+    );
+
+    $(".resume").hover(
+        function() {
+            $(".resume-image").show();
+            $(".slide").hide();
+        }, function() {
+            $(".resume-image").hide();
+            $(".slide").show();
+        }
+    );
+
+    $(".contact").hover(
+        function() {
+            $(".contact-image").show();
+            $(".slide").hide();
+        }, function() {
+            $(".contact-image").hide();
+            $(".slide").show();
+        }
+    );
+
+    $(".title").click(
+        function() {
+            $(".biscuits").show();
+        }
+    );
+
+    $(".biscuits").click(
+        function() {
+            $(this).hide();
+        }
+    );
 </script>
