@@ -37,6 +37,33 @@
     padding-top: 100px;
 }
 
-    .navbar-item.active {
-        font-weight: bold;
-    }
+.navbar-item.active {
+    font-weight: bold;
+}
+
+/* Home element styling */
+.title {
+    cursor: pointer;
+}
+
+.title:hover {
+    color: #D5609B;
+}
+
+.slide {
+    width: 25em; 
+    height: auto;
+}
+
+.role {
+    cursor: pointer;
+}
+
+.role:hover {
+    color: #D5609B;
+}
+
+.role-image {
+    width: 25em; 
+    height: auto;
+}
