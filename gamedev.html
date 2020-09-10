@@ -26,25 +26,52 @@
                     <button class="navbar-toggler" style="float: left !important" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Albert Cao</a>
+                    <a class="navbar-brand" href="#">albert cao</a>
                 </div>
             </nav>
             <div class="collapse" id="navbarToggleExternalContent">
                 <div class="bg-dark p-4">
-                    <a href="home.html" class="nav-link">Home</a>
-                    <a href="projects.html" class="nav-link font-weight-bold">Projects</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
+                    <a href="home.html" class="nav-link font-weight-bold">home</a>
+                    <a href="webdev.html" class="nav-link">web dev</a>
+                    <a href="gamedev.html" class="nav-link">game dev</a>
+                    <a href="writer.html" class="nav-link">writer</a>
+                    <a href="misc.html" class="nav-link">misc</a>
+                    <a href="resume.html" class="nav-link">resume</a>
+                    <a href="contact.html" class="nav-link">contact</a>
                 </div>
             </div>
         </div>
         <!-- Content -->
         <div class="container">
-            <div class="row text-center mt-3">
+            <div class="row text-center mt-3 mb-0">
                 <div class="col-12">
-                    <h1 class="title"><b>Projects</b></h1>
-                    <h7>This is the site for real.</h7>
+                    <a href="home.html" style="text-decoration: none"><h1 class="title"><b>back.</b></h1></a>
+                </div>
+            </div>
+            <div class="row mb-4" style="position: -webkit-sticky; position: sticky; top: 0">
+                <div class="col-12 text-center">
+                    <h7>i'm albert.</h7>
                 </div>
             </div>
         </div>
     </body>
 </html>
+
+<script>
+    $(".role-image").each(function(){
+        $(this).hide();
+        $(".biscuits").hide();
+    });
+
+    $(".title").click(
+        function() {
+            $(".biscuits").show();
+        }
+    );
+
+    $(".biscuits").click(
+        function() {
+            $(this).hide();
+        }
+    );
+</script>

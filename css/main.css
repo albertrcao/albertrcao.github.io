@@ -61,6 +61,14 @@
     transform: translate(-50%);
 }
 
+.slide-mobile {
+    width: 60%;
+    height: 30%;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+}
+
 .role {
     cursor: pointer;
 }
