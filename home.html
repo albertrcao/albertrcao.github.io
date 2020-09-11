@@ -18,7 +18,7 @@
         }
     </style>
     <!-- Body -->
-    <body>
+    <body id="body">
         <div>
             <!-- Navbar -->
             <nav class="navbar navbar-dark bg-dark d-block d-sm-none">
@@ -50,41 +50,42 @@
             </div>
             <div class="row mb-4" style="position: -webkit-sticky; position: sticky; top: 0">
                 <div class="col-12 text-center">
-                    <h7>i'm albert.</h7>
+                    <h7 style="font-style: italic">i'm albert.</h7>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-4 text-center">
                     <div class="row">
                         <div class="col-12">
-                            <a href="webdev.html" style="text-decoration: none; color: black"><h3 class="role webdev">web dev</h3></a>
+                            <a href="webdev.html" style="text-decoration: none"><h3 class="role webdev">web dev</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="gamedev.html" style="text-decoration: none; color: black"><h3 class="role gamedev">game dev</h3></a>
+                            <a href="gamedev.html" style="text-decoration: none"><h3 class="role gamedev">game dev</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="writer.html" style="text-decoration: none; color: black"><h3 class="role writer">writer</h3></a>
+                            <a href="writer.html" style="text-decoration: none"><h3 class="role writer">writer</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="misc.html" style="text-decoration: none; color: black"><h3 class="role misc">misc</h3></a>
+                            <a href="misc.html" style="text-decoration: none"><h3 class="role misc">misc</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="resume.html" style="text-decoration: none; color: black"><h3 class="role resume">resume</h3></a>
+                            <a href="resume.html" style="text-decoration: none"><h3 class="role resume">resume</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="contact.html" style="text-decoration: none; color: black"><h3 class="role contact">contact</h3></a>
+                            <a href="contact.html" style="text-decoration: none"><h3 class="role contact">contact</h3></a>
                         </div>
                     </div>
+                    <button class="mode-button" onclick="toggleMode()" title="toggle dark/light mode">🌛</button>
                     <div class="row mt-4 mb-5">
                         <div class="col-12 d-block d-sm-none">
                             <img src="images/slide.gif" class="slide-mobile">
@@ -215,4 +216,38 @@
             $(this).hide();
         }
     );
+
+    // Dark-mode code.
+    function toggleMode() {
+        var body = document.getElementById('body');
+        var currentClass = body.className;
+        var newClass = body.className == 'dark-mode' ? 'light-mode' : 'dark-mode';
+        body.className = newClass;
+
+        document.cookie = 'theme=' + (newClass == 'light-mode' ? 'light' : 'dark');
+        console.log('Cookies are now: ' + document.cookie);
+        console.log(body.className);
+
+        if (body.className == 'light-mode') {
+            $(".mode-button").text("🌛");
+            console.log("🌛");
+        }
+        else {
+            $(".mode-button").text("🌞");
+            console.log("🌞");
+        }
+    }
+
+    function isDarkThemeSelected() {
+        return document.cookie.match(/theme=dark/i) != null;
+    }
+
+    function setThemeFromCookie() {
+        var body = document.getElementById('body');
+        body.className = isDarkThemeSelected() ? 'dark-mode' : 'light-mode';
+    }
+
+    (function() {
+        setThemeFromCookie();
+    })();
 </script>

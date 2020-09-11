@@ -18,7 +18,7 @@
         }
     </style>
     <!-- Body -->
-    <body>
+    <body id="body">
         <div>
             <!-- Navbar -->
             <nav class="navbar navbar-dark bg-dark d-block d-sm-none">
@@ -74,4 +74,36 @@
             $(this).hide();
         }
     );
+
+    // Dark-mode code.
+    function toggleMode() {
+        var body = document.getElementById('body');
+        var currentClass = body.className;
+        var newClass = body.className == 'dark-mode' ? 'light-mode' : 'dark-mode';
+        body.className = newClass;
+
+        document.cookie = 'theme=' + (newClass == 'light-mode' ? 'light' : 'dark');
+        console.log('Cookies are now: ' + document.cookie);
+        console.log(body.className);
+
+        if (body.className == 'light-mode') {
+            $(".mode-button").prop("value", "🌛");
+        }
+        else {
+            $(".mode-button").prop("value", "🌞");
+        }
+    }
+
+    function isDarkThemeSelected() {
+        return document.cookie.match(/theme=dark/i) != null;
+    }
+
+    function setThemeFromCookie() {
+        var body = document.getElementById('body');
+        body.className = isDarkThemeSelected() ? 'dark-mode' : 'light-mode';
+    }
+
+    (function() {
+        setThemeFromCookie();
+    })();
 </script>

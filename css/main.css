@@ -95,3 +95,33 @@
     transform: translate(0%, 0%);
     cursor: pointer;
 }
+
+/* Site-wide dark-mode */
+body.dark-mode {
+  background-color: #111111;
+  color: #eeeeee;
+}
+
+body.dark-mode a {
+    color: #eeeeee;
+}
+
+body.light-mode {
+  background-color: white;
+  color: black;
+}
+
+body.light-mode a {
+    color: black;
+}
+
+.mode-button {
+    font-size: 2rem;
+    border: 0;
+    background: transparent;
+    text-decoration: none;
+}
+
+.mode-button:focus {
+    outline: none;
+}
