@@ -104,6 +104,7 @@ body.dark-mode {
 
 body.dark-mode a {
     color: #eeeeee;
+    text-decoration: none;
 }
 
 body.light-mode {
@@ -113,6 +114,7 @@ body.light-mode {
 
 body.light-mode a {
     color: black;
+    text-decoration: none;
 }
 
 .mode-button {

@@ -34,6 +34,7 @@
                     <a href="home.html" class="nav-link font-weight-bold">home</a>
                     <a href="webdev.html" class="nav-link">web dev</a>
                     <a href="gamedev.html" class="nav-link">game dev</a>
+                    <a href="gamedev.html" class="nav-link">ai dev</a>
                     <a href="writer.html" class="nav-link">writer</a>
                     <a href="misc.html" class="nav-link">misc</a>
                     <a href="resume.html" class="nav-link">resume</a>
@@ -57,32 +58,37 @@
                 <div class="col-12 col-md-4 text-center">
                     <div class="row">
                         <div class="col-12">
-                            <a href="webdev.html" style="text-decoration: none"><h3 class="role webdev">web dev</h3></a>
+                            <a href="webdev.html"><h3 class="role webdev">web dev</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="gamedev.html" style="text-decoration: none"><h3 class="role gamedev">game dev</h3></a>
+                            <a href="gamedev.html"><h3 class="role gamedev">game dev</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="writer.html" style="text-decoration: none"><h3 class="role writer">writer</h3></a>
+                            <a href="aidev.html"><h3 class="role aidev">ai dev</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="misc.html" style="text-decoration: none"><h3 class="role misc">misc</h3></a>
+                            <a href="writer.html"><h3 class="role writer">writer</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="resume.html" style="text-decoration: none"><h3 class="role resume">resume</h3></a>
+                            <a href="misc.html"><h3 class="role misc">misc</h3></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a href="contact.html" style="text-decoration: none"><h3 class="role contact">contact</h3></a>
+                            <a href="resume.html"><h3 class="role resume">resume</h3></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="contact.html"><h3 class="role contact">contact</h3></a>
                         </div>
                     </div>
                     <button class="mode-button" onclick="toggleMode()" title="toggle dark/light mode">🌛</button>
@@ -106,6 +112,11 @@
                     <div class="row">
                         <div class="col-12">
                             <img src="images/gamedev.jpg" class="role-image gamedev-image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="images/aidev.jpg" class="role-image aidev-image">
                         </div>
                     </div>
                     <div class="row">
@@ -140,6 +151,7 @@
 </html>
 
 <script>
+    // Link hover code.
     $(".role-image").each(function(){
         $(this).hide();
         $(".biscuits").hide();
@@ -161,6 +173,16 @@
             $(".slide").hide();
         }, function() {
             $(".gamedev-image").hide();
+            $(".slide").show();
+        }
+    );
+
+    $(".aidev").hover(
+        function() {
+            $(".aidev-image").show();
+            $(".slide").hide();
+        }, function() {
+            $(".aidev-image").hide();
             $(".slide").show();
         }
     );
