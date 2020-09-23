@@ -133,6 +133,11 @@ body.light-mode a {
     outline: none;
 }
 
+.nav-link {
+    color: white !important;
+    text-decoration: none;
+}
+
 /* CMS slideshow */
 .carousel {
     height: 100%;
