@@ -112,6 +112,10 @@ body.dark-mode a {
     text-decoration: none;
 }
 
+body.dark-mode .modal-body {
+    background-color: #343a40;
+}
+
 body.light-mode {
   background-color: white;
   color: black;

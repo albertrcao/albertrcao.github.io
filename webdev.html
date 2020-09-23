@@ -1,5 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Modals -->
+    <div class="modal fade" id="cmsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document" style="top: 20%">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!-- <div class="row">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-12">
+                            <img id="photograph" src="" style="height: auto; width: 100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Head -->
     <head>
         <title>🤙 Albert Cao</title>
@@ -111,40 +130,37 @@
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/cms1.png">
+                                <img id="cms1" src="images/cms1.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms2.png">
+                                <img id="cms2" src="images/cms2.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms3.png">
+                                <img id="cms3" src="images/cms3.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms3.png">
+                                <img id="cms4" src="images/cms4.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms4.png">
+                                <img id="cms5" src="images/cms5.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms5.png">
+                                <img id="cms6" src="images/cms6.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms6.png">
+                                <img id="cms7" src="images/cms7.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms7.png">
+                                <img id="cms8" src="images/cms8.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms8.png">
+                                <img id="cms9" src="images/cms9.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms9.png">
+                                <img id="cms10" src="images/cms10.png">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/cms10.png">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="images/cms11.png">
+                                <img id="cms11" src="images/cms11.png">
                             </div>
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -240,4 +256,17 @@
     $hamburger.on("click", function(e) {
         $hamburger.toggleClass("is-active");
     });
+
+    // Slideshow image enlarge code.
+    $(".carousel-item").click(function () {
+        var targetModal = $('#cmsModal');
+        var targetImage = $(this).find("img").attr('id');
+
+        console.log(targetImage);
+
+        targetModal.find("#photograph").attr("src", "images/" + targetImage + ".png");
+
+        targetModal.modal('toggle');
+    });
+
 </script>
