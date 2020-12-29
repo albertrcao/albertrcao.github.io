@@ -17,6 +17,7 @@
 			let mixer;
 
 			var scene, camera, renderer, mesh, clock;
+			var particleSystem, particleCount, particles;
 			var upVector;
 			var crate, crateTexture, crateNormalMap, crateBumpMap;
 			var meshFloor;
@@ -39,6 +40,9 @@
 					// tent: {obj: "models/Tent_Poles_01.obj", mtl: "models/Tent_Poles_01.mtl", mesh: null},
 					// campfire: {obj: "models/Campfire_01.obj", mtl: "models/Campfire_01.mtl", mesh: null},
 					// pirateship: {obj: "models/Pirateship.obj", mtl: "models/Pirateship.mtl", mesh: null},
+					// pirateship: {obj: "models/Pirateship.obj", mtl: "models/Pirateship.mtl", mesh: null},
+					forest: {obj: "models/forest.obj", mtl: "models/forest.mtl", mesh: null},
+					tree: {obj: "models/tree.obj", mtl: "models/tree.mtl", mesh: null},
 					cake: {obj: "models/cake.obj", mtl: "models/cake.mtl", mesh: null},
 					pistol: {obj: "models/pistol.obj", mtl: "models/pistol.mtl", mesh: null, castShadow: false},
 				};
@@ -74,7 +78,7 @@
 				}
 				
 				meshFloor = new THREE.Mesh(
-					new THREE.PlaneGeometry(50, 50),
+					new THREE.PlaneGeometry(100, 100),
 					new THREE.MeshPhongMaterial({color: 0xffffff, map: textureLoader.load("textures/snow_diffuse.jpg"), bumpMap: textureLoader.load("textures/snow_bump.jpg"), normalMap: textureLoader.load("textures/snow_normal.jpg")})
 					);
 					const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -92,6 +96,33 @@
 				// 	new THREE.BoxGeometry(3, 3, 3),
 				// 	new THREE.MeshPhongMaterial({color: 0xffffff, map: crateTexture, bumpMap: crateBumpMap, normalMap: crateNormalMap})
 				// );
+
+				var loader = new THREE.TextureLoader();
+    			loader.crossOrigin = '';
+				particleCount = 3000;
+				var pMaterial = new THREE.PointCloudMaterial({
+				color: 0xFFFFFF,
+				size: 1,
+				map: loader.load(
+					"https://s3-us-west-2.amazonaws.com/s.cdpn.io/212131/snow-small.png"
+				),
+				blending: THREE.AdditiveBlending,
+				depthTest: false,
+				transparent: true
+				});
+
+				particles = new THREE.Geometry;
+				for (var i = 0; i < particleCount; i++) {
+					var pX = Math.random()*500 - 250,
+						pY = Math.random()*500 - 250,
+						pZ = Math.random()*500 - 250,
+						particle = new THREE.Vector3(pX, pY, pZ);
+					particle.velocity = {};
+					particle.velocity.y = 0;
+					particles.vertices.push(particle);
+				}
+				particleSystem = new THREE.PointCloud(particles, pMaterial);
+				scene.add(particleSystem);
 
 				for (var _key in models) {
 					(function(key) {
@@ -125,7 +156,7 @@
 					})(_key);
 				}
 
-				scene.background = new THREE.Color(0x00BFFF);
+				scene.background = new THREE.Color(0xE5E4E2);
 				// scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
 				light.position.set(-3, 6, -3);
@@ -144,34 +175,18 @@
 				// crate.receiveShadow = true;
 				// crate.castShadow = true;
 
-				// Enemy model.
-				fbxLoader.load('models/Samba Dancing.fbx', function (object) {
-					mixer = new THREE.AnimationMixer(object);
-					const action = mixer.clipAction(object.animations[0]);
-					action.play();
-
-					object.traverse(function (child) {
-						if (child.isMesh) {
-							child.castShadow = true;
-							child.receiveShadow = true;
-							// child.material.map = enemyTexture;
-						}
-					} );
-					
-					// object.scale.set(0.007, 0.007, 0.007);
-					object.scale.set(0.013, 0.013, 0.013);
-					object.position.set(0, 0, 0);
-					object.rotation.y = 3;
-					
-					var boundingBox = new THREE.BoxHelper(object, 0xffff00);
-					boundingBox.update();
-					// scene.add(boundingBox);
-
-					collidableMeshList.push(boundingBox);
-					scene.add(object);
-				} );
-
 				camera.add(listener);
+
+				const jam = new THREE.Audio( listener );
+
+				audioLoader.load('sounds/jam.mp3', function(buffer) {
+					jam.setBuffer(buffer);
+					jam.offset = 0;
+					jam.setVolume(0.2);
+					jam.autoPlay = true;
+					jam.setLoop(true);
+					jam.play();
+				});
 
 				scene.add(mesh);
 				scene.add(meshFloor);
@@ -216,23 +231,112 @@
 			}
 
 			function onResourcesLoaded() {
+				// Enemy model.
+				fbxLoader.load('models/Samba Dancing.fbx', function (object) {
+					mixer = new THREE.AnimationMixer(object);
+					const action = mixer.clipAction(object.animations[0]);
+					action.play();
+
+					object.traverse(function (child) {
+						if (child.isMesh) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+							// child.material.map = enemyTexture;
+						}
+					} );
+					
+					// object.scale.set(0.007, 0.007, 0.007);
+					object.scale.set(0.013, 0.013, 0.013);
+					object.position.set(0, 0, 0);
+					object.rotation.y = 3;
+					
+					var boundingBox = new THREE.BoxHelper(object, 0xffff00);
+					boundingBox.update();
+					// scene.add(boundingBox);
+
+					collidableMeshList.push(boundingBox);
+					scene.add(object);
+				} );
+
 				// meshes["tent1"] = models.tent.mesh.clone();
 				// meshes["tent2"] = models.tent.mesh.clone();
 				// meshes["campfire1"] = models.campfire.mesh.clone();
 				// meshes["campfire2"] = models.campfire.mesh.clone();
 				// meshes["pirateship"] = models.pirateship.mesh.clone();
+				meshes["forest"] = models.forest.mesh.clone();
+				meshes["forest2"] = models.forest.mesh.clone();
+				meshes["forest3"] = models.forest.mesh.clone();
+				meshes["forest4"] = models.forest.mesh.clone();
+				meshes["forest5"] = models.forest.mesh.clone();
+				meshes["forest6"] = models.forest.mesh.clone();
+				meshes["forest7"] = models.forest.mesh.clone();
+				meshes["forest8"] = models.forest.mesh.clone();
+				meshes["forest9"] = models.forest.mesh.clone();
+				meshes["forest10"] = models.forest.mesh.clone();
+				// meshes["tree"] = models.tree.mesh.clone();
 				meshes["cake"] = models.cake.mesh.clone();
 				meshes["pistol"] = models.pistol.mesh.clone();
 
 				// meshes["tent1"].position.set(-5, 0, 8);
 				// meshes["campfire1"].position.set(-5, 0, 4);
-				meshes["cake"].position.set(0, 0, -1.5)
-				meshes["cake"].rotation.set(0, 1.5, 0)
+				meshes["forest"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest"].position.set(0, -0.55, 7);
+
+				meshes["forest2"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest2"].position.set(5, -0.55, 3.5);
+				meshes["forest2"].rotation.set(0, 4.5, 0);
+
+				meshes["forest3"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest3"].position.set(-7, -0.55, 0);
+				meshes["forest3"].rotation.set(0, -4.5, 0);
+
+				meshes["forest4"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest4"].position.set(7, -0.55, 14);
+				meshes["forest4"].rotation.set(0, 0, 0);
+
+				meshes["forest5"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest5"].position.set(-3, -0.55, 16);
+				meshes["forest5"].rotation.set(0, 0, 0);
+
+				meshes["forest6"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest6"].position.set(-15, -0.55, 12);
+				meshes["forest6"].rotation.set(0, -1, 0);
+
+				meshes["forest7"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest7"].position.set(16, -0.55, 7);
+				meshes["forest7"].rotation.set(0, 1, 0);
+
+				meshes["forest8"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest8"].position.set(-3, -0.55, 24);
+				meshes["forest8"].rotation.set(0, 0, 0);
+
+				meshes["forest9"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest9"].position.set(-15, -0.55, 22);
+				meshes["forest9"].rotation.set(0, -1, 0);
+
+				meshes["forest10"].scale.set(0.6, 0.6, 0.6);
+				meshes["forest10"].position.set(16, -0.55, 17);
+				meshes["forest10"].rotation.set(0, 1, 0);
+
+				meshes["cake"].position.set(0, 0, -1.5);
+				meshes["cake"].rotation.set(0, 1.5, 0);
 				meshes["cake"].scale.set(0.075, 0.075, 0.075);
+
 				meshes["pistol"].scale.set(10, 10, 10);
 
 				// scene.add(meshes["tent1"]);
 				// scene.add(meshes["campfire1"]);
+				scene.add(meshes["forest"]);
+				scene.add(meshes["forest2"]);
+				scene.add(meshes["forest3"]);
+				scene.add(meshes["forest4"]);
+				scene.add(meshes["forest5"]);
+				scene.add(meshes["forest6"]);
+				scene.add(meshes["forest7"]);
+				scene.add(meshes["forest8"]);
+				scene.add(meshes["forest9"]);
+				scene.add(meshes["forest10"]);
+				// scene.add(meshes["tree"]);
 				scene.add(meshes["cake"]);
 				scene.add(meshes["pistol"]);
 			}
@@ -276,6 +380,9 @@
 				}
 
 				requestAnimationFrame(animate);
+
+				particleSystem.rotation.y += 0.01;
+    			simulateRain();
 
 				var time = Date.now() * 0.0005;
 				var delta = clock.getDelta();
@@ -459,6 +566,20 @@
 					}
 				}	
 			}
+
+			function simulateRain() {
+				var pCount = particleCount;
+				while (pCount--) {
+					var particle = particles.vertices[pCount];
+					if (particle.y < -200) {
+						particle.y = 200;
+						particle.velocity.y = 0;
+					}
+					particle.velocity.y -= Math.random() * .005;
+					particle.y += particle.velocity.y;
+				}
+				particles.verticesNeedUpdate = true;
+			};
 
 			function keyDown(event) {
 				keyboard[event.keyCode] = true;
