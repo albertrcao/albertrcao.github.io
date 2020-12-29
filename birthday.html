@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>huh</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as THREE from './js/three.js';
+			import { OBJLoader } from './js/OBJLoader.js';
+			import { MTLLoader } from './js/MTLLoader.js';
+			import { FBXLoader } from './js/FBXLoader.js';
+
+			let mixer;
+
+			var scene, camera, renderer, mesh, clock;
+			var upVector;
+			var crate, crateTexture, crateNormalMap, crateBumpMap;
+			var meshFloor;
+			var keyboard = {};
+			var player = {height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02, canShoot: 0};
+			var loadingManager = new THREE.LoadingManager();
+			var textureLoader = new THREE.TextureLoader(loadingManager);
+			var loadingScreen = {
+				scene: new THREE.Scene(),
+				camera: new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000),
+				box: new THREE.Mesh(
+					new THREE.BoxGeometry(0.5, 0.5, 0.5),
+					new THREE.MeshBasicMaterial({color: 0xFF00FF})
+					)
+				};
+				var LOADING_MANAGER = null;
+				var RESOURCES_LOADED = false;
+
+				var models = {
+					// tent: {obj: "models/Tent_Poles_01.obj", mtl: "models/Tent_Poles_01.mtl", mesh: null},
+					// campfire: {obj: "models/Campfire_01.obj", mtl: "models/Campfire_01.mtl", mesh: null},
+					// pirateship: {obj: "models/Pirateship.obj", mtl: "models/Pirateship.mtl", mesh: null},
+					cake: {obj: "models/cake.obj", mtl: "models/cake.mtl", mesh: null},
+					pistol: {obj: "models/pistol.obj", mtl: "models/pistol.mtl", mesh: null, castShadow: false},
+				};
+
+				var meshes = {};
+				var bullets = []
+
+			var collidableMeshList = [];
+			var hit = false;
+			var number = 0;
+			const fbxLoader = new FBXLoader();
+			const listener = new THREE.AudioListener();
+			const mouse = new THREE.Vector2();
+			const target = new THREE.Vector2();
+			const windowHalf = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
+			const nero = new THREE.Audio(listener);
+			const audioLoader = new THREE.AudioLoader();
+
+			function init() {
+				scene = new THREE.Scene();
+				camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
+				clock = new THREE.Clock();
+				loadingScreen.box.position.set(0, 0, 5);
+				loadingScreen.camera.lookAt(loadingScreen.box.position);
+				loadingScreen.scene.add(loadingScreen.box);
+				loadingManager.onProgress = function(item, loaded, total) {
+					console.log(item, loaded, total);
+				};
+				loadingManager.onLoad = function() {
+					console.log("loaded all resources");
+					RESOURCES_LOADED = true;
+					onResourcesLoaded();
+				}
+				
+				meshFloor = new THREE.Mesh(
+					new THREE.PlaneGeometry(50, 50),
+					new THREE.MeshPhongMaterial({color: 0xffffff, map: textureLoader.load("textures/snow_diffuse.jpg"), bumpMap: textureLoader.load("textures/snow_bump.jpg"), normalMap: textureLoader.load("textures/snow_normal.jpg")})
+					);
+					const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+					const light = new THREE.PointLight(0xffffff, 0.3, 0, 2);
+					
+				// mesh = new THREE.Mesh(
+				// 	new THREE.BoxGeometry(1, 1, 1),
+				// 	new THREE.MeshPhongMaterial({color: 0xff9999})
+				// );
+
+				// crateTexture = textureLoader.load("textures/crate0_diffuse.png");
+				// crateBumpMap = textureLoader.load("textures/crate0_bump.png");
+				// crateNormalMap = textureLoader.load("textures/crate0_normal.png");
+				// crate = new THREE.Mesh(
+				// 	new THREE.BoxGeometry(3, 3, 3),
+				// 	new THREE.MeshPhongMaterial({color: 0xffffff, map: crateTexture, bumpMap: crateBumpMap, normalMap: crateNormalMap})
+				// );
+
+				for (var _key in models) {
+					(function(key) {
+						var mtlLoader = new MTLLoader(loadingManager);
+						mtlLoader.load(models[key].mtl, function(materials) {
+							materials.preload();
+							var objLoader = new OBJLoader(loadingManager);
+							objLoader.setMaterials(materials);
+							objLoader.load(models[key].obj, function(mesh) {
+								mesh.traverse(function(node) {
+									if (node instanceof THREE.Mesh) {
+										if ('castShadow' in models[key]) {
+											node.castShadow = models[key].castShadow;
+										}
+										else {
+											node.castShadow = true;
+										}
+
+										if ('receiveShadow' in models[key]) {
+											node.receiveShadow = models[key].receiveShadow;
+										}
+										else {
+											node.receiveShadow = true;
+										}
+									}
+								});
+
+								models[key].mesh = mesh;
+							});
+						})
+					})(_key);
+				}
+
+				scene.background = new THREE.Color(0x00BFFF);
+				// scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
+
+				light.position.set(-3, 6, -3);
+				light.castShadow = true;
+				light.shadow.camera.near = 0.1;
+				light.shadow.camera.far = 25;
+
+				meshFloor.rotation.x -= Math.PI / 2;
+				meshFloor.receiveShadow = true;
+				
+				// mesh.position.y += 1;
+				// mesh.receiveShadow = true;
+				// mesh.castShadow = true;
+
+				// crate.position.set(2.5, 3/2, 2.5);
+				// crate.receiveShadow = true;
+				// crate.castShadow = true;
+
+				// Enemy model.
+				fbxLoader.load('models/Samba Dancing.fbx', function (object) {
+					mixer = new THREE.AnimationMixer(object);
+					const action = mixer.clipAction(object.animations[0]);
+					action.play();
+
+					object.traverse(function (child) {
+						if (child.isMesh) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+							// child.material.map = enemyTexture;
+						}
+					} );
+					
+					// object.scale.set(0.007, 0.007, 0.007);
+					object.scale.set(0.013, 0.013, 0.013);
+					object.position.set(0, 0, 0);
+					object.rotation.y = 3;
+					
+					var boundingBox = new THREE.BoxHelper(object, 0xffff00);
+					boundingBox.update();
+					// scene.add(boundingBox);
+
+					collidableMeshList.push(boundingBox);
+					scene.add(object);
+				} );
+
+				camera.add(listener);
+
+				scene.add(mesh);
+				scene.add(meshFloor);
+				scene.add(ambientLight);
+				scene.add(light);
+				// scene.add(crate);
+
+				camera.position.set(0, player.height, -5);
+				camera.lookAt(new THREE.Vector3(0, player.height, 0))
+
+				renderer = new THREE.WebGLRenderer({antialias: true});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.PCFShadowMap;
+				document.body.appendChild(renderer.domElement);
+
+				// document.addEventListener('mousemove', onMouseMove, false);
+    			// document.addEventListener('wheel', onMouseWheel, false);
+				window.addEventListener('resize', onResize, false);
+
+				animate();
+			}
+
+			function onMouseMove(event) {
+				mouse.x = (event.clientX - windowHalf.x);
+				mouse.y = (event.clientY - windowHalf.x);
+			}
+
+			function onMouseWheel(event) {
+				camera.position.z += event.deltaY * 0.1; // move camera along z-axis
+			}
+
+			function onResize(event) {
+				const width = window.innerWidth;
+				const height = window.innerHeight;
+
+				windowHalf.set( width / 2, height / 2 );
+
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+				renderer.setSize( width, height );
+			}
+
+			function onResourcesLoaded() {
+				// meshes["tent1"] = models.tent.mesh.clone();
+				// meshes["tent2"] = models.tent.mesh.clone();
+				// meshes["campfire1"] = models.campfire.mesh.clone();
+				// meshes["campfire2"] = models.campfire.mesh.clone();
+				// meshes["pirateship"] = models.pirateship.mesh.clone();
+				meshes["cake"] = models.cake.mesh.clone();
+				meshes["pistol"] = models.pistol.mesh.clone();
+
+				// meshes["tent1"].position.set(-5, 0, 8);
+				// meshes["campfire1"].position.set(-5, 0, 4);
+				meshes["cake"].position.set(0, 0, -1.5)
+				meshes["cake"].rotation.set(0, 1.5, 0)
+				meshes["cake"].scale.set(0.075, 0.075, 0.075);
+				meshes["pistol"].scale.set(10, 10, 10);
+
+				// scene.add(meshes["tent1"]);
+				// scene.add(meshes["campfire1"]);
+				scene.add(meshes["cake"]);
+				scene.add(meshes["pistol"]);
+			}
+
+			function sleep(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms));
+			}
+
+			function animate() {
+				// target.x = ( 1 - mouse.x ) * 0.002;
+  				// target.y = ( 1 - mouse.y ) * 0.002;
+  
+  				// camera.rotation.x += (target.y - camera.rotation.x);
+				// camera.rotation.y += (target.x - camera.rotation.y);
+					
+				audioLoader.load('sounds/nero.mp3', function(buffer) {
+					nero.setBuffer(buffer);
+					nero.setVolume(0.5);
+
+					if (hit == false) {
+						nero.setLoop(true);
+						nero.play();
+					}
+					else if (hit == true) {
+						nero.isPlaying = false;
+						nero.stop();
+					}
+				});
+				  
+				if (RESOURCES_LOADED == false) {
+					requestAnimationFrame(animate);
+					loadingScreen.box.position.x -= 0.05;
+					
+					if (loadingScreen.box.position.x < -10) {
+						loadingScreen.box.position.x = 10;
+					}
+
+					loadingScreen.box.position.y = Math.sin(loadingScreen.box.position.x);
+					renderer.render(loadingScreen.scene, loadingScreen.camera);
+					return;
+				}
+
+				requestAnimationFrame(animate);
+
+				var time = Date.now() * 0.0005;
+				var delta = clock.getDelta();
+
+				if (mixer) mixer.update(delta);
+
+				for (var index = 0; index < bullets.length; index+=1) {
+					if (bullets[index] === undefined) continue;
+					if (bullets[index].alive == false) {
+						bullets.splice(index, 1);
+						continue;
+					}
+
+					bullets[index].position.add(bullets[index].velocity);
+				}
+
+				// mesh.rotation.x += 0.01;
+				// mesh.rotation.y += 0.01;
+				
+				meshes["pistol"].position.set(
+					camera.position.x - Math.sin(camera.rotation.y + Math.PI/5) * 0.8,
+					camera.position.y - 0.5 + Math.sin(time * 4) * 0.01,
+					camera.position.z + Math.cos(camera.rotation.y + Math.PI/5) * 0.8
+				);
+
+				meshes["pistol"].rotation.set(
+					camera.rotation.x,
+					camera.rotation.y - Math.PI,
+					camera.rotation.z
+				);
+
+				// w
+				if (keyboard[87]) {
+					camera.position.x -= Math.sin(camera.rotation.y) * player.speed;
+					camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
+
+					meshes["pistol"].position.set(
+						camera.position.x - Math.sin(camera.rotation.y + Math.PI/5) * 0.8,
+						camera.position.y - 0.5 + Math.sin(time * 14) * 0.05,
+						camera.position.z + Math.cos(camera.rotation.y + Math.PI/5) * 0.8
+					);
+				}
+
+				// s
+				if (keyboard[83]) {
+					camera.position.x += Math.sin(camera.rotation.y) * player.speed;
+					camera.position.z += -Math.cos(camera.rotation.y) * player.speed;
+
+					meshes["pistol"].position.set(
+						camera.position.x - Math.sin(camera.rotation.y + Math.PI/5) * 0.8,
+						camera.position.y - 0.5 + Math.sin(time * 14) * 0.05,
+						camera.position.z + Math.cos(camera.rotation.y + Math.PI/5) * 0.8
+					);
+				}
+
+				// a
+				if (keyboard[65]) {
+					camera.position.x += Math.sin(camera.rotation.y + Math.PI/2) * player.speed;
+					camera.position.z += -Math.cos(camera.rotation.y + Math.PI/2) * player.speed;
+
+					meshes["pistol"].position.set(
+						camera.position.x - Math.sin(camera.rotation.y + Math.PI/5) * 0.8,
+						camera.position.y - 0.5 + Math.sin(time * 14) * 0.05,
+						camera.position.z + Math.cos(camera.rotation.y + Math.PI/5) * 0.8
+					);
+				}
+
+				// d
+				if (keyboard[68]) {
+					camera.position.x += Math.sin(camera.rotation.y - Math.PI/2) * player.speed;
+					camera.position.z += -Math.cos(camera.rotation.y - Math.PI/2) * player.speed;
+
+					meshes["pistol"].position.set(
+						camera.position.x - Math.sin(camera.rotation.y + Math.PI/5) * 0.8,
+						camera.position.y - 0.5 + Math.sin(time * 14) * 0.05,
+						camera.position.z + Math.cos(camera.rotation.y + Math.PI/5) * 0.8
+					);
+				}
+
+				// left
+				if (keyboard[37]) {
+					camera.rotation.y -= player.turnSpeed;
+				}
+
+				// right
+				if (keyboard[39]) {
+					camera.rotation.y += player.turnSpeed;
+				}
+
+				// up
+				if (keyboard[38] && player.canShoot <= 0) {
+					const shot = new THREE.Audio(listener);
+
+					audioLoader.load('sounds/shot.mp3', function(buffer) {
+						shot.setBuffer(buffer);
+						shot.offset = 0;
+						shot.setVolume(0.5);
+						shot.play();
+					});
+
+					var bullet = new THREE.Mesh(
+						new THREE.SphereGeometry(0.02, 8, 8),
+						new THREE.MeshBasicMaterial({color: 0x000000})
+					);
+
+					bullet.position.set(
+						meshes["pistol"].position.x,
+						meshes["pistol"].position.y + 0.1,
+						meshes["pistol"].position.z
+					);
+
+					bullet.velocity = new THREE.Vector3(
+						-Math.sin(camera.rotation.y),
+						0,
+						Math.cos(camera.rotation.y)
+					)
+
+					bullet.alive = true;
+					update(bullet);
+
+					setTimeout(function() {
+						bullet.alive = false;
+						scene.remove(bullet);
+					}, 500);
+
+					bullets.push(bullet);
+					scene.add(bullet);
+
+					meshes["pistol"].rotation.x -= 0.1,
+
+					player.canShoot = 100;
+				}
+
+				if (player.canShoot > 0) {
+					player.canShoot -= 4;
+				}
+
+				// spacebar
+				// if (keyboard[32]) {
+				// 	camera.position.y = player.height + 1;
+
+				// 	setTimeout(function() {
+				// 		camera.position.y = player.height;
+				// 	}, 200);
+				// }
+
+				renderer.render(scene, camera);
+			}
+
+			function update(bullet) {
+				for (var vertexIndex = 0; vertexIndex < bullet.geometry.vertices.length; vertexIndex++) {		
+					var localVertex = bullet.geometry.vertices[vertexIndex].clone();
+					var globalVertex = localVertex.applyMatrix4(bullet.matrix);
+					var directionVector = globalVertex.sub(bullet.position);
+					
+					var ray = new THREE.Raycaster(bullet.position.clone(), directionVector.clone().normalize());
+					var collisionResults = ray.intersectObjects(collidableMeshList);
+					if (collisionResults.length > 0 && collisionResults[0].distance < 3) {
+						console.log("hit");
+						hit = true;
+
+						const ouch = new THREE.Audio( listener );
+
+						audioLoader.load('sounds/ouch1.mp3', function(buffer) {
+							ouch.setBuffer(buffer);
+							ouch.offset = 0;
+							ouch.setVolume(0.5);
+							if (ouch.isPlaying == false) {
+								ouch.play();
+							}
+						});
+					
+						setTimeout(function() {
+							bullet.alive = false;
+							scene.remove(bullet);
+						}, 20);
+
+						setTimeout(function() {
+							hit = false;
+						}, 1500);
+					}
+				}	
+			}
+
+			function keyDown(event) {
+				keyboard[event.keyCode] = true;
+			}
+
+			function keyUp(event) {
+				keyboard[event.keyCode] = false;
+			}
+
+			window.addEventListener('keydown', keyDown);
+			window.addEventListener('keyup', keyUp);
+			window.onload = init;
+		</script>
+	</body>
+</html>
