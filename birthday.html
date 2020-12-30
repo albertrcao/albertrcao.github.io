@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	<link href='https://fonts.googleapis.com/css?family=Alata' rel='stylesheet'>
 	<head>
 		<meta charset="utf-8">
 		<title>huh</title>
@@ -8,13 +9,16 @@
 		</style>
 	</head>
 	<body>
+		<div style="position: absolute; top: 0px; width: 100%; padding: 10px; box-sizing: border-box; text-align: center;">
+			<span style="font-size: 20px; font-family: Alata;">WASD: move, ←→: look, ↑: shoot, E: eat cake</span>
+		</div>
 		<script type="module">
 			import * as THREE from './js/three.js';
 			import { OBJLoader } from './js/OBJLoader.js';
 			import { MTLLoader } from './js/MTLLoader.js';
 			import { FBXLoader } from './js/FBXLoader.js';
 
-			let mixer;
+			let mixer, mixer2;
 
 			var scene, camera, renderer, mesh, clock;
 			var particleSystem, particleCount, particles;
@@ -52,7 +56,7 @@
 
 			var collidableMeshList = [];
 			var hit = false;
-			var number = 0;
+			var eaten = false;
 			const fbxLoader = new FBXLoader();
 			const listener = new THREE.AudioListener();
 			const mouse = new THREE.Vector2();
@@ -245,7 +249,6 @@
 						}
 					} );
 					
-					// object.scale.set(0.007, 0.007, 0.007);
 					object.scale.set(0.013, 0.013, 0.013);
 					object.position.set(0, 0, 0);
 					object.rotation.y = 3;
@@ -388,6 +391,7 @@
 				var delta = clock.getDelta();
 
 				if (mixer) mixer.update(delta);
+				if (mixer2) mixer2.update(delta);
 
 				for (var index = 0; index < bullets.length; index+=1) {
 					if (bullets[index] === undefined) continue;
@@ -528,6 +532,42 @@
 				// 		camera.position.y = player.height;
 				// 	}, 200);
 				// }
+
+				// e
+				if (keyboard[69]) {
+					if (eaten == false) {
+						scene.remove(meshes["cake"]);
+						const bite = new THREE.Audio(listener);
+	
+						audioLoader.load('sounds/bite.mp3', function(buffer) {
+							bite.setBuffer(buffer);
+							bite.offset = 0;
+							bite.setVolume(0.5);
+							bite.play();
+						});
+
+						eaten = true;
+
+						fbxLoader.load('models/Flair.fbx', function (object2) {
+							mixer2 = new THREE.AnimationMixer(object2);
+							const action2 = mixer2.clipAction(object2.animations[0]);
+							action2.play();
+
+							object2.traverse(function (child) {
+								if (child.isMesh) {
+									child.castShadow = true;
+									child.receiveShadow = true;
+								}
+							} );
+							
+							object2.scale.set(0.007, 0.007, 0.007);
+							object2.position.set(0, 0, -2);
+							object2.rotation.y = 3;
+							
+							scene.add(object2);
+						});
+					}
+				}
 
 				renderer.render(scene, camera);
 			}
