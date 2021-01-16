@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Head -->
     <head>
         <link rel="stylesheet" href="css/minizinc.css">
-        <script src="js/minizinc.js" data-init></script> 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+        <script src="js/minizinc.js" data-init></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     </head>
+    <!-- Style -->
+    <style>
+        body {
+            font-family: 'Courier New';
+        }
+    </style>
+    <!-- Body -->
     <body>
         <div class="minizinc-embedding">
             <pre data-type="mzn">
@@ -34,47 +46,47 @@
                 % For all pizzas p, p is in paid if and only if there is not a coupon c that was used to get p.
                 % Defines the set of paid pizzas.
                 constraint 
-                  forall(p in pizzas) (
+                    forall(p in pizzas) (
                     (p in paid) <-> not exists(c in used)(usedFor[c, p])
-                  );
-                  
+                    );
+                    
                 % Constraint 2 - Used is the set of coupons we use.
                 % For all coupons c, c is in used if and only if there is a pizza p that was received by using c.
                 % Defines the set of used coupons.
                 constraint
-                  forall(c in coupons) (
+                    forall(c in coupons) (
                     (c in used) <-> exists(p in pizzas)(usedFor[c, p])
-                  );
+                    );
                 
                 % Constraint 3 - Any coupon we used must be justified by enough paid pizzas.
                 % For all coupons c, if c is in used, then the number of pizzas p that we used to justify applying c is at least as many as the number of pizzas c says we have to buy.
                 constraint
-                  forall(c in coupons) (
+                    forall(c in coupons) (
                     (c in used) -> sum(p in pizzas)(justifies[c, p]) >= (buy[c])
-                  );
-                  
+                    );
+                    
                 % Constraint 4 - No coupon is used for too many pizzas.
                 % For all coupons c, the number of pizzas we get for free by applying a coupon is at most the number of pizzas c says we're allowed to get free.
                 constraint
-                  forall(c in coupons) (
+                    forall(c in coupons) (
                     sum(p in pizzas)(usedFor[c, p]) <= (free[c])
-                  );
+                    );
                 
                 % Constraint 5 - Each free pizza costs at most as much as the cheapest pizza purchased to justify the coupon used.
                 % For all coupons c, and every 2 pizzas p1, p2 (that are not identical), if we used c to justify getting p1 for free, and we bought p2 to justify applying c, 
                 % then the price of p1 must be at most the price of p2.
                 constraint
-                  forall(c in coupons, p1, p2 in pizzas where p1 != p2) (
+                    forall(c in coupons, p1, p2 in pizzas where p1 != p2) (
                     (usedFor[c, p1] /\ justifies[c, p2]) -> (price[p1] <= price[p2])
-                  );
+                    );
                 
                 % Constraint 6 - We pay for all pizzas that justify using coupons.
                 % For all coupons c and pizzas p, if p is used to justify applying c, then we must pay for p.
                 constraint
-                  forall(c in coupons, p in pizzas) (
+                    forall(c in coupons, p in pizzas) (
                     justifies[c, p] -> (p in paid)
-                  );
-                  
+                    );
+                    
                 % Constraint 7 - The total cost is not too high.
                 % The price of the sum over all pizzas p that are paid for is at most costBound.
                 constraint
@@ -84,17 +96,17 @@
                 % For all coupons c and pizzas p, if justifies(c, p) then c has to be a coupon and p has to be a pizza.
                 % For all coupons c and pizzas p, if usedFor(c, p) then c has to be a coupon and p has to be a pizza. 
                 constraint
-                  forall(c in coupons, p in pizzas) (
+                    forall(c in coupons, p in pizzas) (
                     (justifies[c, p] -> (1 <= c /\ c <= m /\ 1 <= p /\ p <= n)) /\
                     (usedFor[c, p] -> (1 <= c /\ c <= m /\ 1 <= p /\ p <= n))
-                  );
-                  
+                    );
+                    
                 % Bonus Constraint - For all coupons c and pizzas p, if c has been used to justify getting p, then it cannot be used again.
                 % For all coupons c and pizzas p, if justifies(c, p) then there is not a coupon q not equal to c that was used to justify getting p.
                 constraint
-                  forall(c in coupons, p in pizzas) (
+                    forall(c in coupons, p in pizzas) (
                     (justifies[c,p] -> not exists(q in coupons where c != q)(justifies[q,p]))
-                  );
+                    );
                 
                 % Such that: we get all pizzas, cost is less than or equal to costBound, and coupons are used only if justified.
                 solve minimize cost;
@@ -110,6 +122,6 @@
                 free = [1,1];
                 costBound = 50;
             </pre>
-          </div>
+        </div>
     </body>
 </html>

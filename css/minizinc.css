@@ -3,8 +3,8 @@
 
 .minizinc-embedded-container {
   display: flex;
-  border: 1px solid black;
-  border-radius: 2px;
+  /* border: 1px solid black; */
+  /* border-radius: 2px; */
   position: relative; }
   .minizinc-embedded-container > form {
     flex: 1 1 0;
@@ -12,6 +12,10 @@
     flex-direction: column; }
   .minizinc-embedded-container .minizinc-embedded-hidden {
     display: none; }
+  .minizinc-embedded-output {
+    display: block !important; }
+  label {
+    display: none !important; }
 
 .minizinc-embedded-iframe {
   position: absolute;
@@ -21,17 +25,17 @@
   height: 1px; }
 
 .minizinc-embedded-model {
-  height: 17em;
+  height: 15.75em;
   resize: vertical; }
 
 .minizinc-embedded-data {
   border-top: 1px solid black;
-  min-height: 5em;
+  height: 4.5em;
   resize: vertical; }
 
 .minizinc-embedded-output {
   border-top: 1px solid black;
-  min-height: 5em;
+  height: 4.5em;
   resize: vertical; }
 
 .minizinc-embedded-toolbar {
