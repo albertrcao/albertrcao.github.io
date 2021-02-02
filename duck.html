@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script> -->
+        <script src="js\tf.min.0.13.2.js"></script>
+        <script src="js\fabric.js"></script>
+        <script src="js\index.js"></script>
+    </head>
+    <style>
+        body {
+            background-color: #FFD700;
+        }
+
+        #clear-canvas {
+            background-color: #fa625f !important;
+            border-color: #fa625f !important;
+        }
+
+        #save-canvas {
+            background-color: #005995 !important;
+            border-color: #005995 !important;
+        }
+
+        #art {
+            height: 500px;
+            width: 500px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #frame {
+            height: 500px;
+            width: 500px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <body>
+        <div class="container">
+            <!-- page title -->
+            <div class="row mt-4">
+                <div class="col-12 d-flex justify-content-center">
+                    <img src="images/lilduck.png" style="height: 4em; width: auto; margin-left: 1em; margin-right: 1em">
+                    <h1><b>¿ is it a duck ?</b></h1>
+                    <img src="images/lilduckreversed.png" style="height: 4em; width: auto; margin-left: 1em; margin-right: 1em">
+                </div>
+            </div>
+            <!-- canvas/display space -->
+            <div class="row mt-4">
+                <div id="space" class="col-12 d-flex justify-content-center">
+                    <div id="showcase"></div>
+                    <div class="canvas-container" style="border: 5px solid black; border-radius: 15px; user-select: none;">
+                        <canvas id="c" width="500px" height="500px" style=" border-radius: 15px; touch-action: none; user-select: none; cursor: crosshair"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- results -->
+            <div class="row mb-4 mt-2">
+                <div class="col-12 text-center" id="console"></div>
+            </div>
+            <!-- save button -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center text-center">
+                    <div>
+                        <button id="save-canvas" class="btn btn-info">done!</button><br>
+                    </div>
+                </div>
+            </div>
+            <!-- clear button -->
+            <div class="row mt-2 mb-5">
+                <div class="col-12 d-flex justify-content-center text-center">
+                    <div>
+                        <button id="clear-canvas" class="btn btn-info">clear</button><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>   
+        // function to get element by id using $     
+        var $ = function(id){return document.getElementById(id)};
+        var $j = jQuery.noConflict();
+
+        // variables
+        var submitted = false;
+        const clearEl = $("clear-canvas");
+        const saveEl = $("save-canvas");
+        
+        // save button behaviour
+        saveEl.onclick = function() {
+            var canvas = $("c");
+            var ctx = canvas.getContext("2d");
+            
+            var img = new Image(); 
+            img.crossOrigin = "anonymous";
+            img.src = canvas.toDataURL("image/png"); 
+            img.id = "art";
+
+            // if user just submitted
+            if (submitted == false) {
+                // display newly-drawn image
+                document.getElementById("showcase").appendChild(img);
+
+                // add a neat frame
+                var frame = document.createElement('img');
+                frame.setAttribute("src", "images/frame.png")
+                frame.id = "frame";
+                document.getElementById("showcase").appendChild(frame);
+
+                // hide the clear button
+                document.getElementsByClassName("canvas-container")[0].style.visibility = "hidden";
+                clearEl.style.display = "none";
+
+                // change the text of the submit button
+                saveEl.innerHTML = "again!";
+                submitted = true;
+            }
+            // if user goes back to drawing
+            else {
+                // clear the canvas
+                eraseCanvas();
+
+                // remove the neat frame
+                document.getElementById("showcase").remove();
+                var showcase = document.createElement('div');
+                showcase.setAttribute("id", "showcase");
+                document.getElementById("space").appendChild(showcase);
+
+                // bring back the clear button
+                document.getElementsByClassName("canvas-container")[0].style.visibility = "visible";
+                clearEl.style.display = "block";
+
+                // change the text of the submit button
+                saveEl.innerHTML = "done!";
+                submitted = false; 
+                
+                // clear prediction results
+                $("console").innerText = "";
+
+                // free up memory
+                delete img;
+            }
+        };
+
+        // clear button behaviour
+        clearEl.onclick = async function() {
+            eraseCanvas();
+
+            // clear prediction results
+            $("console").innerText = "";
+        };
+
+        loadModel()
+    </script>
+</html>
