@@ -182,7 +182,8 @@ body.light-mode a {
 
 .carousel-item img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Magnifier code */
