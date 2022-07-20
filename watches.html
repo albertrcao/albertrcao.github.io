@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head -->
+    <head>
+        <title>⌚</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/watches.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <!-- Body -->
+    <body id="body">
+        <!-- Content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12" id="parts">
+                    <div id="dials">
+                        <img class="parts" id="st1901-panda-dial" src="images/watchmaking/st1901_panda_dial.png" alt="panda dial">
+                        <img class="parts" id="st1901-black-dial" src="images/watchmaking/st1901_black_dial.png" alt="black dial">
+                    </div>
+                    <div id="cases">
+                        <img class="parts" id="st1901-predaytona-case" src="images/watchmaking/st1901_predaytona_case.png"  alt="smooth case">
+                        <img class="parts" id="st1901-daytona-case" src="images/watchmaking/st1901_daytona_case.png" alt="daytona case">
+                        <img class="parts" id="st1901-speedmaster-case" src="images/watchmaking/st1901_speedmaster_case.png" alt="speedmaster case">
+                    </div>
+                    <div id="straps">
+                        <img class="parts" id="stitched-leather-dark-brown" src="images/watchmaking/stitched_leather_dark_brown.png" alt="dark brown strap">
+                        <img class="parts" id="stitched-leather-tan" src="images/watchmaking/stitched_leather_tan.png" alt="tan strap">
+                        <img class="parts" id="stitched-leather-black" src="images/watchmaking/stitched_leather_black.png" alt="black strap">
+                        <img class="parts" id="leather-dark-brown" src="images/watchmaking/leather_dark_brown.png" alt="dark brown stitched strap">
+                        <img class="parts" id="leather-tan" src="images/watchmaking/leather_tan.png" alt="tan stitched strap">
+                        <img class="parts" id="leather-black" src="images/watchmaking/leather_black.png" alt="black stitched strap">
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="buttons">
+                <div class="row">
+                    <div class="col-4">
+                        <div id="dial-buttons">
+                            <div id="dial-label">
+                                <h2 class="header-label">dials</h2>
+                            </div>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('st1901-panda-dial')">
+                                panda
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('st1901-black-dial')">
+                                black
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div id="case-buttons">
+                            <div id="case-label">
+                                <h2 class="header-label">cases</h2>
+                            </div>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('st1901-predaytona-case')">
+                                smooth
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('st1901-daytona-case')">
+                                daytona
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('st1901-speedmaster-case')">
+                                speedmaster
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div id="strap-buttons">
+                            <div id="strap-label">
+                                <h2 class="header-label">leather straps</h2>
+                            </div>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('stitched-leather-dark-brown')">
+                                dark brown
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('stitched-leather-tan')">
+                                tan
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('stitched-leather-black')">
+                                black
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('leather-dark-brown')">
+                                dark brown stitched
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('leather-tan')">
+                                tan stitched
+                            </button>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark"
+                                onClick="togglePart('leather-black')">
+                                black stitched
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" id="submit">
+                    <h3 class="header-label" id="saved-selection">selected: 
+                        <label class="selection-label" id="default-label">none</label>
+                        <label class="selection-label" id="selected-dial-label"></label>
+                        <label class="selection-label" id="selected-case-label"></label>
+                        <label class="selection-label" id="selected-strap-label"></label>
+                    </h3>
+                    <button 
+                        type="button"
+                        class="btn btn-dark btn-lg"
+                        onClick="setupSubmission()"
+                        data-toggle="modal" data-target="#submission-modal">
+                        submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- Modal -->
+    <div class="modal fade" id="submission-modal" tabindex="-1" role="dialog" aria-labelledby="submission-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submission-modal-label">confirm submission?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="watches.php">
+                    <div class="modal-body">
+                        <div id="content">
+                            <div id="submission-string" name="submission-string"></div>
+                            <div id="submission-images"></div>
+                            <div id="strap-disclaimer">
+                                note: the strap options here are just examples. you can request any kind of strap you'd like!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">go back</button>
+                        <button type="submit" class="btn btn-success">send it</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</html>
+
+<script>
+    function togglePart(id) {
+        thisPart = document.getElementById(id);
+
+        if (thisPart.id.includes("dial")) {
+            partVariants = document.getElementById("dials");
+            partType = "dial";
+        }
+        else if (thisPart.id.includes("case")){
+            partVariants = document.getElementById("cases");
+            partType = "case";
+        }
+        else if (thisPart.id.includes("leather")){
+            partVariants = document.getElementById("straps");
+            partType = "strap";
+        }
+        
+        Array.from(partVariants.children).forEach((item) => {
+            if (item.id == id) {
+                thisPart.style.visibility = "visible";
+                document.getElementById('default-label').innerHTML = "";
+
+                if (partType == "dial") {
+                    document.getElementById('selected-dial-label').innerHTML = thisPart.alt + " + ";
+                }
+                else if (partType == "case") {
+                    document.getElementById('selected-case-label').innerHTML = thisPart.alt + " + ";
+                }
+                else if (partType == "strap") {
+                    document.getElementById('selected-strap-label').innerHTML = thisPart.alt;
+                }
+            }
+            else {
+                item.style.visibility = "hidden";
+            }
+        })
+    }
+
+    function getSubmission() {
+        savedSelection = document.getElementById("saved-selection");
+        submission = "";
+        partsList = [];
+
+        Array.from(savedSelection.children).forEach((item) => {
+            submission = submission + item.innerHTML;
+            partsList.push(item.innerHTML);
+        })
+
+        return[submission, partsList];
+    }
+
+    function setupSubmission() {
+        submission = getSubmission()[0];
+        partsList = getSubmission()[1];
+        submissionString = document.getElementById("submission-string");
+        submissionString.innerHTML = submission;
+        
+        Array.from(partsList).forEach((item) => {
+            elem = document.createElement("img");
+            document.getElementById("submission-images").appendChild(elem);
+
+            if (item.includes("black dial")) {
+                elem.src = "images/watchmaking/real_st1901_black_dial.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("panda dial")) {
+                elem.src = "images/watchmaking/real_st1901_panda_dial.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("smooth case")) {
+                elem.src = "images/watchmaking/real_st1901_predaytona_case.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("daytona case")) {
+                elem.src = "images/watchmaking/real_st1901_daytona_case.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("speedmaster case")) {
+                elem.src = "images/watchmaking/real_st1901_speedmaster_case.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("black strap")) {
+                elem.src = "images/watchmaking/real_stitched_leather_black.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("dark brown strap")) {
+                elem.src = "images/watchmaking/real_stitched_leather_dark_brown.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("tan strap")) {
+                elem.src = "images/watchmaking/real_stitched_leather_tan.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("black stitched strap")) {
+                elem.src = "images/watchmaking/real_leather_black.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("dark brown stitched strap")) {
+                elem.src = "images/watchmaking/real_leather_dark_brown.jpeg";
+                elem.className = "submission-image";
+            }
+            else if (item.includes("tan stitched strap")) {
+                elem.src = "images/watchmaking/real_leather_tan.jpeg";
+                elem.className = "submission-image";
+            }
+        })
+
+    }
+
+    $('#submission-modal').on('hidden.bs.modal', function() {
+        submissionImages = document.getElementById("submission-images");
+
+        Array.from(submissionImages.children).forEach((item) => {
+            item.remove();
+        })
+    });
+</script>

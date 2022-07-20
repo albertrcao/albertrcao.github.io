@@ -1,0 +1,141 @@
+/* Custom font */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
+}
+
+.btn {
+    margin: 2%;
+}
+
+.btn-dark {
+    zoom: 140%;
+}
+
+.btn-dark:hover {
+    color: #212529 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-dark:focus {
+    color: white !important;
+    background-color: #212529 !important;
+}
+
+.header-label {
+    font-weight: bold;
+}
+
+.selection-label {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.modal-backdrop {
+    width: 150vw !important;
+    height: 150vh !important;
+}
+
+.modal-dialog {
+    zoom: 140% !important;
+}
+
+.parts {
+    position: absolute;
+    margin-top: 10%;
+    margin-left: 40%;
+    top: 0;
+    left: 0;
+    width: 80%;
+}
+
+.submission-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+}
+
+#body {
+    background-color: #fefced;
+    padding-bottom: 5rem;
+    zoom: 70%;
+}
+
+#parts {
+    position: relative;
+    right: 30%;
+}
+
+#st1901-panda-dial {
+    z-index: 10;
+}
+
+#st1901-black-dial {
+    z-index: 10;
+}
+
+#st1901-predaytona-case {
+    z-index: 20;
+}
+
+#st1901-daytona-case {
+    z-index: 20;
+}
+
+#st1901-speedmaster-case {
+    z-index: 20;
+}
+
+#stitched-leather-dark-brown {
+    z-index: 30;
+}
+
+#buttons {
+    position: relative;
+    margin-top: 100%;
+    margin-bottom: 3%;
+}
+
+#dial-buttons {
+    text-align: center;
+}
+
+#case-buttons {
+    text-align: center;
+}
+
+#strap-buttons {
+    text-align: center;
+}
+
+#dial-label {
+    margin-bottom: 10%;
+}
+
+#case-label {
+    margin-bottom: 10%;
+}
+
+#strap-label {
+    margin-bottom: 10%;
+}
+
+#submit {
+    text-align: center;
+}
+
+#submission-string {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+#submission-images {
+    text-align: center;
+}
+
+#strap-disclaimer {
+    text-align: center;
+    font-style: italic;
+    margin-top: 1rem;
+}
