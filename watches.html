@@ -8,7 +8,9 @@
         <link rel="stylesheet" type="text/css" href="css/watches.css" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
     </head>
     <!-- Body -->
     <body id="body">
@@ -155,21 +157,21 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" action="watches.php">
-                    <div class="modal-body">
-                        <div id="content">
-                            <div id="submission-string" name="submission-string"></div>
-                            <div id="submission-images"></div>
-                            <div id="strap-disclaimer">
-                                note: the strap options here are just examples. you can request any kind of strap you'd like!
-                            </div>
+                <div class="modal-body">
+                    <div id="content">
+                        <div id="submission-string"></div>
+                        <div id="submission-images"></div>
+                        <div id="strap-disclaimer">
+                            note: the strap options here are just examples. you can request any kind of strap you'd like!
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">go back</button>
-                        <button type="submit" class="btn btn-success">send it</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">go back</button>
+                    <button class="btn btn-success" id="copy-button" data-clipboard-target="#submission-string">
+                        copy configuration to clipboard
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -177,19 +179,19 @@
 
 <script>
     function togglePart(id) {
-        thisPart = document.getElementById(id);
+        var thisPart = document.getElementById(id);
 
         if (thisPart.id.includes("dial")) {
-            partVariants = document.getElementById("dials");
-            partType = "dial";
+            var partVariants = document.getElementById("dials");
+            var partType = "dial";
         }
         else if (thisPart.id.includes("case")){
-            partVariants = document.getElementById("cases");
-            partType = "case";
+            var partVariants = document.getElementById("cases");
+            var partType = "case";
         }
         else if (thisPart.id.includes("leather")){
-            partVariants = document.getElementById("straps");
-            partType = "strap";
+            var partVariants = document.getElementById("straps");
+            var partType = "strap";
         }
         
         Array.from(partVariants.children).forEach((item) => {
@@ -214,9 +216,9 @@
     }
 
     function getSubmission() {
-        savedSelection = document.getElementById("saved-selection");
-        submission = "";
-        partsList = [];
+        var savedSelection = document.getElementById("saved-selection");
+        var submission = "";
+        var partsList = [];
 
         Array.from(savedSelection.children).forEach((item) => {
             submission = submission + item.innerHTML;
@@ -227,13 +229,13 @@
     }
 
     function setupSubmission() {
-        submission = getSubmission()[0];
-        partsList = getSubmission()[1];
-        submissionString = document.getElementById("submission-string");
+        var submission = getSubmission()[0];
+        var partsList = getSubmission()[1];
+        var submissionString = document.getElementById("submission-string");
         submissionString.innerHTML = submission;
         
         Array.from(partsList).forEach((item) => {
-            elem = document.createElement("img");
+            var elem = document.createElement("img");
             document.getElementById("submission-images").appendChild(elem);
 
             if (item.includes("black dial")) {
@@ -284,11 +286,45 @@
 
     }
 
+    // clearing images from submission modal on hide
     $('#submission-modal').on('hidden.bs.modal', function() {
-        submissionImages = document.getElementById("submission-images");
+        var submissionImages = document.getElementById("submission-images");
 
         Array.from(submissionImages.children).forEach((item) => {
             item.remove();
         })
+    });
+
+    // tooltip shenanigans
+    function setTooltip(btn, message) {
+        $(btn).tooltip("hide")
+            .attr("data-original-title", message)
+            .tooltip("show");
+    }
+
+    function hideTooltip(btn) {
+        setTimeout(function() {
+            $(btn).tooltip("hide");
+        }, 1000);
+    }
+
+    // clipboard shenanigans
+    var btn = document.getElementById("copy-button");
+    var clipboard = new ClipboardJS(btn);
+
+    $(btn).tooltip({
+        trigger: "click",
+        placement: "bottom",
+        container: "button"
+    });
+
+    clipboard.on("success", function(e) {
+        setTooltip(e.trigger, "copied!");
+        hideTooltip(e.trigger);
+    });
+
+    clipboard.on("error", function(e) {
+        setTooltip(e.trigger, "failed!");
+        hideTooltip(e.trigger);
     });
 </script>
