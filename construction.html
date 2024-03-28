@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head -->
+    <head>
+        <title>🤙 Albert Cao</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <!-- Style -->
+    <style>
+        .splash-slide {
+            width: 40%;
+            height: auto;
+        }
+    </style>
+    <!-- Body -->
+    <body id="body">
+        <!-- Content -->
+        <div class="container">
+            <div class="row text-center mt-3 mb-0">
+                <div class="col-12">
+                    <h1 class="title"><b>hey. how's it goin'?</b></h1>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <h7 style="font-style: italic">i'm albert.</h7>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button class="mode-button" onclick="toggleMode()" title="toggle dark/light mode">🌛</button>
+                </div>
+            </div>
+            <div class="row mt-4 mb-5">
+                <div class="col-12 text-center">
+                    <img src="images/slide.gif" class="splash-slide">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 style="font-weight: bold">site is being updated - check back soon!</h3>
+                </div>
+                <div class="col-12 text-center">
+                    <h1>🏗️ 🚧 🧰</h1>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    // Dark-mode code.
+    function toggleMode() {
+        var body = document.getElementById('body');
+        var currentClass = body.className;
+        var newClass = body.className == 'dark-mode' ? 'light-mode' : 'dark-mode';
+        body.className = newClass;
+
+        document.cookie = 'theme=' + (newClass == 'light-mode' ? 'light' : 'dark');
+        console.log('Cookies are now: ' + document.cookie);
+        console.log(body.className);
+
+        if (body.className == 'light-mode') {
+            $(".mode-button").text("🌛");
+            console.log("🌛");
+        }
+        else if (body.className == 'dark-mode') {
+            $(".mode-button").text("🌞");
+            console.log("🌞");
+        }
+    }
+
+    function isDarkThemeSelected() {
+        return document.cookie.match(/theme=dark/i) != null;
+    }
+
+    function setThemeFromCookie() {
+        var body = document.getElementById('body');
+        body.className = isDarkThemeSelected() ? 'dark-mode' : 'light-mode';
+
+        if (body.className == 'light-mode') {
+            $(".mode-button").text("🌛");
+        }
+        else if (body.className == 'dark-mode') {
+            $(".mode-button").text("🌞");
+        }
+    }
+
+    (function() {
+        setThemeFromCookie();
+    })();
+</script>
